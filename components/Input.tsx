@@ -3,6 +3,9 @@
 import { createNote } from "@/utils/api";
 import Link from "next/link";
 import { useState } from "react";
+import copy from "@/public/copy.svg";
+import Image from "next/image";
+import { FaCopy } from "react-icons/fa";
 
 type Note = {
 	id: string;
@@ -24,6 +27,7 @@ export default function Input() {
 		setNote({
 			id: noteRes.data.id,
 		});
+		console.log(content);
 		setContent("");
 		setTitle("");
 		setDisabled(true);
@@ -40,7 +44,7 @@ export default function Input() {
 	};
 
 	return (
-		<div className="bg-secondary p-5 rounded-xl flex flex-col w-full sm:w-[90%] md:w-[75%] lg:w-[60%] gap-y-2 mt-[10%]">
+		<div className="bg-secondary p-5 rounded-xl flex flex-col w-full sm:w-[90%] md:w-[75%] lg:w-[60%] gap-y-2 mt-[10%] shadow-xl select-none">
 			<h1 className="text-3xl font-extrabold ">New note</h1>
 			<span className="mt-2 font-bold text-xl">Title</span>
 			<input
@@ -57,31 +61,31 @@ export default function Input() {
 				required
 				onChange={(e) => setContent(e.target.value)}
 			></textarea>
-			<button
-				disabled={disabled}
-				type="submit"
-				onClick={onSubmit}
-				className="bg-foreground disabled:opacity-50 hover:opacity-50 text-background text-xl font-medium p-2 rounded-lg mt-2 transition-all duration-300 ease-in-out"
-			>
-				Create
-			</button>
-			{note && (
-				<div className="mt-2 flex flex-col">
-					<span className="font-bold text-xl">Note created!</span>
-					<Link
-						className="text-blue-600 hover:underline"
-						href={`/note/${note.id}`}
-					>
-						{process.env.NEXT_PUBLIC_CLIENT_URL}/note/{note.id}
-					</Link>
+			<div className="flex flex-row gap-2">
+				<button
+					disabled={disabled}
+					type="submit"
+					onClick={onSubmit}
+					className="bg-foreground disabled:opacity-50 hover:opacity-50 text-background text-xl font-medium p-2 rounded-lg mt-2 transition-all duration-300 ease-in-out w-full"
+				>
+					Create
+				</button>
+				{note && (
 					<button
 						onClick={copyToClipboard}
-						className="self-start hover:opacity-50"
+						className="flex flex-row items-center justify-around text-white w-[50%] bg-background border-foreground border disabled:opacity-50 hover:opacity-50 text-background text-xl font-medium p-2 rounded-lg mt-2 transition-all duration-300 ease-in-out"
 					>
-						{isCopied ? "Copied!" : "Click here to copy link"}
+						{!isCopied ? (
+							<>
+								<FaCopy />{" "}
+								<span className="sm:block hidden text-xl">Copy Link</span>
+							</>
+						) : (
+							"Copied!"
+						)}
 					</button>
-				</div>
-			)}
+				)}
+			</div>
 		</div>
 	);
 }
